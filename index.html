@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Temperature Hot</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+        body {
+            background: url(images/bg-image.jpg) no-repeat;
+            background-size: cover;
+            height: 100vh;
+        }
+
+        #show {
+            display: none;
+        }
+
+        #icon {
+            width: 100px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <form class="col-md-6 m-auto py-5">
+            <div class="input-group mb-3">
+                <input id="city-input" type="text" class="form-control" placeholder="Enter a location for Weather ...">
+                <div class="input-group-append">
+                    <button id="search" type="button" class="btn btn-danger">Search</button>
+                </div>
+            </div>
+        </form>
+        <div class="weather-status text-white text-center">
+            <img id="icon">
+            <h1 id="city-name"></h1>
+            <h3><span id="temp"></span><span id="show">&deg;C</span></h3>
+            <h1 id="weather-description" class="lead"></h1>
+        </div>
+    </div>
+    <script>
+        const button = document.getElementById('search');
+        const inputValue = document.getElementById('city-input');
+        const cityName = document.getElementById('city-name');
+        const temp = document.getElementById('temp');
+        const descreption = document.getElementById('weather-description');
+        const icon = document.getElementById('icon');
+        const show = document.getElementById('show');
+
+        button.addEventListener('click', function () {
+            fetch('https://api.openweathermap.org/data/2.5/weather?q=' + inputValue.value + '&APPID=fa3b77be93b8daed933db528de371a83')
+                .then(res => res.json())
+                .then(data => {
+                    const name = data.name;
+                    const temperature = data.main.temp;
+                    const temperatureDeg = (temperature - 273.15).toFixed(2);
+                    const desc = data.weather[0].main;
+                    const iconValue = data.weather[0].icon;
+                    cityName.innerText = name;
+                    temp.innerText = temperatureDeg;
+                    descreption.innerText = desc;
+                    icon.setAttribute('src', `https://openweathermap.org/img/w/${iconValue}.png`);
+                    show.style.display = 'inline';
+                })
+                .catch(err => alert(err))
+        })
+    </script>
+</body>
+
+</html>
